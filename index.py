@@ -18,12 +18,12 @@ colors = {0: (int(pedestrians_color[0]), int(pedestrians_color[1]), int(pedestri
 
 
 def insert_rectangle(img, bounding_box):
-    x = int(bounding_box[0])
-    y = int(bounding_box[1])
-    width = int(bounding_box[2])
-    height = int(bounding_box[3])
-    label = int(bounding_box[4])
-    score = (math.floor(int(bounding_box[5]) / 20)) + 1
+    x = float(bounding_box[0])
+    y = float(bounding_box[1])
+    width = float(bounding_box[2])
+    height = float(bounding_box[3])
+    score = (math.floor(float(bounding_box[4]) / 20)) + 1
+    label = int(bounding_box[5])
     cv2.rectangle(img, (int(x - width / 2), int(y + height / 2)), (int(x + width / 2), int(y - height / 2)),
                   colors[label], score)
 
@@ -43,9 +43,8 @@ with open(detection_file_path) as f:
 
 for (root, dirs, files) in os.walk(images_path):
     for file_name in files:
-        if not file_name.startswith('.'):  # ignoring .DS_Store hidden file to avoid exceptions
-            image = cv2.imread(f"{images_path}/{file_name}")
-            if file_name in detections_dictionary:
-                for bb in detections_dictionary[file_name]:
-                    insert_rectangle(image, bb)
-            cv2.imwrite(f"{visualizations_path}/{file_name}", image)
+        image = cv2.imread(f"{images_path}/{file_name}")
+        if file_name in detections_dictionary:
+            for bb in detections_dictionary[file_name]:
+                insert_rectangle(image, bb)
+        cv2.imwrite(f"{visualizations_path}/{file_name}", image)
